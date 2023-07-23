@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns=http://www.w3.org/1999/xhtml
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Detail Page</title>
+  <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <link href="../../css/style.css" rel="stylesheet" type="text/css"/>
+  <style>
+            .gallery-wrap .img-big-wrap img {
+                height: 450px;
+                width: auto;
+                display: inline-block;
+                cursor: zoom-in;
+            }
+
+
+            .gallery-wrap .img-small-wrap .item-gallery {
+                width: 60px;
+                height: 60px;
+                border: 1px solid #ddd;
+                margin: 7px 2px;
+                display: inline-block;
+                overflow: hidden;
+            }
+
+            .gallery-wrap .img-small-wrap {
+                text-align: center;
+            }
+            .gallery-wrap .img-small-wrap img {
+                max-width: 100%;
+                max-height: 100%;
+                object-fit: cover;
+                border-radius: 4px;
+                cursor: zoom-in;
+            }
+            .img-big-wrap img{
+                width: 100% !important;
+                height: auto !important;
+            }
+        </style>
+</head>
+<body>
+
+
+<div class="container">
+    <aside class="col-sm-4">
+      <h1>Chi tiết</h1>
+    </aside>
+  <div class="row" th:object="${product}">
+
+    <div class="col-sm-6">
+      <form th:method="post" th:action="@{/bynow}">
+      <div class="container">
+        <div class="card">
+          <div class="row">
+            <aside class="col-sm-6">
+              <article class="card-body p-4">
+                <h2 class="title mb-3" th:text="${product.title}"></h2>
+                <h4 class="title mb-3" th:text="*{author}"></h4>
+                <p class="price-detail-wrap">
+                  <span class="price h3 text-warning">
+                    <span th:text="*{price} +' $'" class="currency"></span><span class="num" ></span>
+                  </span>
+                </p> <!-- price-detail-wrap .// -->
+                <dl class="item-property">
+                  <dt>Description</dt>
+                  <dd><p th:text="*{description}">
+                  </p></dd>
+                </dl>
+                <hr>
+
+              </article> <!-- card-body.// -->
+
+            </aside>
+            <aside class="col-sm-6">
+              <article class="gallery-wrap card-body p-4">
+                <div class="img-big-wrap">
+                  <img th:src="*{image}">
+                </div> <!-- slider-product.// -->
+                <div class="img-small-wrap">
+                </div> <!-- slider-nav.// -->
+                <div class="row">
+                  <div class="col-sm-12">
+                    <dl class="param param-inline" >
+                      <dt style="margin: 10px 0;">Quantity: </dt>
+                      <div class="dd" style="">
+                        <input type="number" min="1" class="form-control form-control-sm" style="width:70px; height: 30px;" name="quantity">
+                        <input type="hidden" name="productID" th:value="${id}">
+                        <input th:if="${session.NAME!=null}" type="hidden" name="customerID" th:value="${session.NAME.userID}">
+                      </div>
+                    </dl>  <!-- item-property .// -->
+                  </div> <!-- col.// -->
+
+                </div> <!-- row.// -->
+                <button th:if="${session.NAME!=null}" class="btn btn-secondary text-uppercase">Buy Now</button>
+
+              </article> <!-- gallery-wrap .end// -->
+
+            </aside>
+          </div> <!-- row.// -->
+        </div> <!-- card.// -->
+      </div>
+        <div class="container" style="margin: 10px 0;">
+          <div class="row">
+            <aside class="col-sm-4">
+              <a type="button" class="btn btn-secondary" th:href="@{/home}">Back</a>
+            </aside>
+          </div>
+        </div>
+      </form>
+
+    </div>
+    <div class="col-sm-6">
+      <aside class="col-sm-12 border card" style="padding: 15px; background-color: rgba(52, 22, 16, 0.08); ">
+        <article>
+          <h2>Comments</h2>
+
+          <div class="comments_field">
+            <div class="card mb-3" th:each="o:${comments}" >
+              <div class="card-body">
+                <div class="d-flex justify-content-between">
+                  <div class="d-flex flex-row align-items-center">
+                    <img th:src="@{/css/images/avatar.jpg}" alt="avatar" width="20"
+                         height="20" style="margin-right: 3px; border-radius: 50%;"/>
+                    <p class="small mb-0 ms-2" th:text=" ${o.user.name}"></p>
+                  </div>
+                  <div class="d-flex flex-row align-items-center">
+                    <i class="far fa-thumbs-up mx-2 fa-xs text-black" style="margin-top: -0.16rem;"></i>
+                  </div>
+                </div>
+                <div style="margin-top: 7px;" th:text="${o.cm}"></div>
+              </div>
+            </div>
+          </div>
+          <form class="comment_submit" th:method="post" th:action="@{/comment}">
+              <div class="row">
+                <div class="form-group col-xs-12 col-sm-9 col-lg-10">
+                  <input type="hidden" name="productID" th:value="${id}">
+                  <textarea class="form-control" id="message" placeholder="Write Something..." required="" name="comment"></textarea>
+                </div>
+              </div>
+            <button type="submit" class="btn btn-secondary pull-right">Submit</button>
+          </form>
+        </article>
+      </aside>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

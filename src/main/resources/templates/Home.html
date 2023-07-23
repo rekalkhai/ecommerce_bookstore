@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html xmlns=http://www.w3.org/1999/xhtml
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Home Page</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link href="../../css/style.css" rel="stylesheet" type="text/css"/>
+    <link rel="icon" href="../../css/images/Logo.png">
+</head>
+<body>
+<!--begin of menu-->
+<nav class="navbar navbar-expand-md navbar-secondary bg-secondary">
+    <div class="container myNav">
+        <a class="navbar-brand" th:href="@{/home}">
+            <div style="width:50px; height:80px">
+                <img src="../../css/images/Logo.png" style="width: 100%" >
+            </div>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse nav__body justify-content-between" id="navbarsExampleDefault">
+            <div style="display:flex; justify-content: space-around;">
+                <div class="btn-group" style="width: 75px">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Category
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li th:each="o:${categories}" class="list-group-item text-white">
+                            <a th:href="@{/category/{cid}(cid=${o.cid})}" th:text="${o.category}"></a>
+                        </li>
+                    </ul>
+                </div>
+                <form action="search" method="post" class="form-inline my-2 my-lg-0">
+                    <div class="input-group input-group-sm" style="margin: 0 40px">
+                        <input name="txt" type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" placeholder="Name or Author..." style="width:250px" required>
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-secondary btn-number">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <ul class="navbar-nav" style="display: flex; justify-content: right">
+                <li class="nav-item">
+                    <a class="nav-link" th:if="${session.NAME!=null}" th:href="@{/admin}">Manager Account</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" th:if="${session.NAME!=null}" th:text="'Hello ' + ${session.NAME.name}"></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/Logout}" th:if="${session.NAME!=null}">Logout</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/Login}" th:if="${session.NAME==null}">Login</a>
+                </li>
+            </ul>
+
+
+            <a th:if="${session.NAME!=null}"  th:href="@{/cart}">
+                <i class="fa fa-shopping-cart"
+                    style="color: white;
+                          font-size:1.5rem"
+                ></i>
+            </a>
+        </div>
+    </div>
+</nav>
+<br><br>
+
+<!--end of menu-->
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <h3>Our Books</h3>
+                    </li>
+                    <li style="display:flex; justify-content: right; align-item: center;">
+                        <select class="form-select sort_select" aria-label="Default select example">
+                            <option selected>Sort</option>
+                            <option value="1">A-Z</option>
+                            <option value="2">Z-A</option>
+                            <option value="3">Price Increase</option>
+                            <option value="4">Price Decrease</option>
+                        </select>
+                    </li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+<br><br>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9 col-lg-12">
+            <div class="row">
+                <div class="col-12 col-md-6 col-lg-3" th:each="o:${products}">
+                    <div class="card book_single" th:onclick="'handleClick(\'' +${o.id} + '\');'">
+                        <div class="book_image">
+                            <img th:src="${o.image}" alt="Card image cap">
+                        </div>
+                        <div class="card-body" style="height:170px;">
+                            <div style="height: 50px;">
+                                <h5 style="word-wrap:normal;"><a th:href="@{/detail/{id}(id=${o.id})}" title="View Product" th:text="${o.title}"></a></h5>
+                            </div>
+                            <div style="height: 40px;">
+                                <p class="card-text show_txt" th:text="${o.author}"></p>
+                            </div>
+                            <div class="book_btn" >
+                                <div style="width:40%">
+                                    <p class="btn btn-secondary btn-block book_btn1" th:text="${o.price}"></p>
+                                </div>
+                                <div class="width:60%">
+                                    <a href="#" class="btn btn-primary btn-block book_btn2">Add to cart</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Footer -->
+<br><br><br>
+
+<div class="footer__banner">
+    <img src="../../css/images/footerImage.png" style="width: 100%" class="footer__banner--img">
+</div>
+
+<footer class="text-light bg-secondary">
+
+    <div class="container">
+        <div class="row">
+            <h4 style="font-size">Contact</h4>
+        </div>
+        <div class="row" style="display: flex; justify-content: space-between;">
+            <div><i class="fa fa-home mr-2"></i>PTIT</div>
+            <div><i class="fa fa-envelope mr-2"></i>maihoangkhaitien@gmail.com</div>
+            <div><i class="fa fa-phone mr-2"></i> 0123 456 789</div>
+            <div><i class="fa fa-print mr-2"></i> 19283746</div>
+        </div>
+        <div class="col-12 copyright mt-3">
+            <div id="btn__backToTop" >
+                <i class="fa fa-caret-up"
+                   aria-hidden="true"
+                   onclick="backtotop()"
+                ></i>
+            </div>
+        </div>
+    </div>
+</footer>
+<script>
+    const backtotop = () => {
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+
+    const mybutton = document.getElementById("btn__backToTop");
+    window.onscroll = () => scrollFunction();
+    const scrollFunction = () => {
+      if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+        mybutton.style.display = "block";
+      } else {
+        mybutton.style.display = "none";
+      }
+    }
+
+    const handleClick = (id) => {
+       window.open(`http://localhost:8080/detail/${id}`, "_self")
+    }
+
+</script>
+</body>
+</html>
+
